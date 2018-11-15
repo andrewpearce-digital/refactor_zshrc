@@ -1,0 +1,3 @@
+#!/bin/bash
+
+toilet -f 3d.flf -w 120 "$@" | lolcat

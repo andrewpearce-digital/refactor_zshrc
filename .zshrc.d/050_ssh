@@ -1,0 +1,15 @@
+# SSH
+# add if statement to get ssh-find-agent if it's not already there, o just bring the script in here
+# git clone git@github.com:wwalker/ssh-find-agent.git
+. ~/ssh-find-agent/ssh-find-agent.sh
+
+ssh-find-agent -a
+if [ -z "$SSH_AUTH_SOCK" ]
+then
+    eval $(ssh-agent) > /dev/null
+    ssh-add -l >/dev/null || alias ssh='ssh-add -l >/dev/null || ssh-add && unalias ssh; ssh'
+fi
+
+ssh-add -l |grep -q `ssh-keygen -lf /home/valveless/.ssh/prod-key | awk '{print $2}'` || ssh-add /home/valveless/.ssh/prod-key
+ssh-add -l |grep -q `ssh-keygen -lf /home/valveless/.ssh/dev-key | awk '{print $2}'` || ssh-add /home/valveless/.ssh/dev-key
+ssh-add -l |grep -q `ssh-keygen -lf /home/valveless/.ssh/id_rsa | awk '{print $2}'` || ssh-add /home/valveless/.ssh/id_rsa
